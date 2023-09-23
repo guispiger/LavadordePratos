@@ -4,44 +4,63 @@
  */
 package src;
 
-import static src.App.done;
-
 /**
  *
  * @author aluno
  */
-public class Lavador implements Runnable{
-    private Escorredor escorredor;
-    private PratosSujosFactory factory;
-    
-    public Lavador(Escorredor escorredor, PratosSujosFactory factory){
+public class Lavador implements Runnable {
+
+    private final Escorredor escorredor;
+    private final PratosSujosFactory factory;
+    private Boolean done;
+
+    public Lavador(Escorredor escorredor, PratosSujosFactory factory) {
         this.escorredor = escorredor;
         this.factory = factory;
     }
 
+    public void done() {
+        this.done = true;
+    }
+
     @Override
     public void run() {
-        
+        done = false;
         while (!done) {
             Prato p = factory.entregaPrato();
-            if(p.getSujeira() == nivelSujeira.BAIXO){
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException ex) {}
-            } else if (p.getSujeira() == nivelSujeira.MEDIO) {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException ex) {}
-            } else {
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException ex) {}
+            long tempo = 0;
+            if (null == p.getSujeira()) {
+                tempo = 10;
+            } else switch (p.getSujeira()) {
+                case BAIXO:
+                    tempo = 3;
+                    break;
+                case MEDIO:
+                    tempo = 5;
+                    break;
+                default:
+                    tempo = 10;
+                    break;
             }
-            
-            escorredor.colocarPrato(p);
-            System.out.println("Lavado Prato: " + p.getSujeira());
+
+            try {
+                synchronized (escorredor) {
+                    while (escorredor.getPratos().size() == escorredor.getMax()) {
+                        try {
+                            escorredor.wait();
+                        } catch (InterruptedException ex) {
+                        }
+                    }
+                    Thread.sleep(tempo);
+                    escorredor.colocarPrato(p);
+                    escorredor.notifyAll();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
         }
+
     }
-    
-    
+
 }
