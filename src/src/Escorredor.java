@@ -5,58 +5,39 @@
 package src;
 
 import java.util.LinkedList;
-import src.Prato;
 
 /**
  *
  * @author aluno
  */
 public class Escorredor {
-    private boolean full = false; 
+    private int max = 10;
     LinkedList<Prato> pratos = new LinkedList<>();
-    private int cont = 1;
-   
     
-    
-    /*public synchronized void add(){
-        while (full) {            
+    //Lavador chama
+    public synchronized void colocarPrato(Prato p){
+        while (pratos.size() == max) {            
             try {
                 wait();
             } catch (InterruptedException ex) {
+                
             }
-            
-            isFull();
-            
-            if(!full){
-                pratos[cont] = new Prato();
-                cont++;
-            }
-
-            notifyAll();
         }
+        notifyAll();
+        pratos.addFirst(p);
     }
     
-    public synchronized void remove(){
-        while (!full) {            
+    //Enxugador chama
+    public synchronized Prato retirarPrato(){
+        while (pratos.size() == 0) {            
             try {
                 wait();
             } catch (InterruptedException ex) {
+                
             }
-            
-            isFull();
-            
-            pratos[cont] = null;
-            cont--;
-            notifyAll();
         }
-    }*/
-    
-    private void isFull(){
-        if (cont == 10) {
-            this.full = true;
-        }
+        notifyAll();
+        return pratos.getLast();
     }
-   
-    
     
 }

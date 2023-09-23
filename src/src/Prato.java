@@ -4,8 +4,6 @@
  */
 package src;
 
-import java.util.Random;
-
 /**
  *
  * @author aluno

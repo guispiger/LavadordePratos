@@ -11,7 +11,7 @@ import java.util.Random;
  * @author guispiger
  */
 public class PratosSujosFactory {
-    private static int i = 1;
+    private static int i = 0;
     
     Random r = new Random();
     
@@ -33,5 +33,4 @@ public class PratosSujosFactory {
         
         return p;
     }
-    
 }

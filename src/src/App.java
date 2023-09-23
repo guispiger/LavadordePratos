@@ -4,36 +4,31 @@
  */
 package src;
 
-import java.util.LinkedList;
-
 /**
  *
  * @author aluno
  */
 public class App {
-    public static void main(String[] args) {
-        int engordurado=0;
-        int medio=0;
-        int baixo=0;
+    
+    public static boolean done = false;
+    
+    public static void aguardar(long milis) {
+		try {
+			Thread.sleep(milis);
+		} catch (InterruptedException ie) {
+			ie.printStackTrace();
+		}
+	}
+    
+    public static void work(){
         
-        PratosSujosFactory pf = new PratosSujosFactory();
-        
-        for (int i = 0; i < 1000000; i++) {
-            Prato p = pf.entregaPrato();
-            //System.out.println(p.getNumSerie() + " - " + p.getSujeira());
-            if (p.getSujeira() == nivelSujeira.BAIXO){
-                baixo++;
-            } else if(p.getSujeira() == nivelSujeira.MEDIO){
-              medio++;  
-            } else if(p.getSujeira() == nivelSujeira.ENGORDURADO){
-                engordurado++;
-            }
-        }
-        
-        System.out.println("Engor: " + engordurado);
-        System.out.println("Medio: " + medio);
-        System.out.println("baixo: " + baixo);
-        
+    }
+    
+    public static void stop(){
+        done = true;
+    }
+    
+    public static void main(String[] args) {    
         
         
         
