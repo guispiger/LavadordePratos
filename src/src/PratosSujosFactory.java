@@ -17,7 +17,7 @@ public class PratosSujosFactory {
         p.setNumSerie(i);
         i++;
         
-        int x = r.nextInt(101);
+        int x = r.nextInt(100);
         
         if(x < 10){
             p.setSujeira(nivelSujeira.ENGORDURADO);

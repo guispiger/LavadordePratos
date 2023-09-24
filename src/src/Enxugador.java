@@ -25,20 +25,20 @@ public class Enxugador implements Runnable {
         Random r = new Random();
 
         while (!done) {
-            try {
-                synchronized (escorredor) {
-                    while (escorredor.getPratos().isEmpty()) {
-                        try {
-                            escorredor.wait();
-                        } catch (InterruptedException ex) {
-                        }
+            synchronized (escorredor) {
+                while (escorredor.getPratos().isEmpty()) {
+                    try {
+                        escorredor.wait();
+                    } catch (InterruptedException ex) {
                     }
-                    escorredor.retirarPrato();
-                    Thread.sleep(r.nextInt(3, 11));
-                    escorredor.notifyAll();
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                escorredor.retirarPrato();
+                try {
+                    Thread.sleep(r.nextInt(3, 11));
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                escorredor.notifyAll();
             }
         }
     }

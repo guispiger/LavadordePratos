@@ -1,5 +1,8 @@
 package src;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author guispiger
@@ -25,38 +28,37 @@ public class Lavador implements Runnable {
         while (!done) {
             Prato p = factory.entregaPrato();
             long tempo = 0;
-            if (null == p.getSujeira()) {
-                tempo = 10;
-            } else switch (p.getSujeira()) {
+            switch (p.getSujeira()) {
                 case BAIXO:
                     tempo = 3;
                     break;
                 case MEDIO:
                     tempo = 5;
                     break;
+                case ENGORDURADO:
+                    tempo = 10;
+                    break;
                 default:
                     tempo = 10;
                     break;
             }
-
-            try {
-                synchronized (escorredor) {
-                    while (escorredor.getPratos().size() == escorredor.getMax()) {
-                        try {
-                            escorredor.wait();
-                        } catch (InterruptedException ex) {
-                        }
+            synchronized (escorredor) {
+                while (escorredor.getPratos().size() == escorredor.getMax()) {
+                    try {
+                        escorredor.wait();
+                    } catch (InterruptedException ex) {
                     }
-                    Thread.sleep(tempo);
-                    escorredor.colocarPrato(p);
-                    escorredor.notifyAll();
                 }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+                try {
+                    Thread.sleep(tempo);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                escorredor.colocarPrato(p);
 
+                escorredor.notifyAll();
+            }
         }
 
     }
-
 }
