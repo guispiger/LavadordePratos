@@ -33,12 +33,15 @@ public class Enxugador implements Runnable {
                     }
                 }
                 escorredor.retirarPrato();
-                try {
-                    Thread.sleep(r.nextInt(3, 11));
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+                if (escorredor.getPratos().isEmpty()) {
+                    escorredor.notify();
                 }
-                escorredor.notifyAll();
+            }
+
+            try {
+                Thread.sleep(r.nextInt(3, 11));
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
             }
         }
     }

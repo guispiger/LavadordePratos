@@ -42,6 +42,12 @@ public class Lavador implements Runnable {
                     tempo = 10;
                     break;
             }
+            try {
+                Thread.sleep(tempo);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+
             synchronized (escorredor) {
                 while (escorredor.getPratos().size() == escorredor.getMax()) {
                     try {
@@ -49,14 +55,10 @@ public class Lavador implements Runnable {
                     } catch (InterruptedException ex) {
                     }
                 }
-                try {
-                    Thread.sleep(tempo);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
                 escorredor.colocarPrato(p);
-
-                escorredor.notifyAll();
+                if (escorredor.getPratos().size() == 1) {
+                    escorredor.notify();
+                }
             }
         }
 
